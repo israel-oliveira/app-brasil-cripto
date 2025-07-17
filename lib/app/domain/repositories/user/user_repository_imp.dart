@@ -22,4 +22,18 @@ class UserRepositoryImp extends UserRepository {
       return Failure(e);
     }
   }
+
+  @override
+  AsyncResult<User> login(String email, String password) async {
+    try {
+      final user = await _userService.login(email, password);
+      if (user != null) {
+        return Success(user);
+      } else {
+        return Failure(NullUserAuthException());
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
 }

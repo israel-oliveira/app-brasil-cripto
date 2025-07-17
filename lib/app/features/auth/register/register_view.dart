@@ -31,10 +31,9 @@ class _RegisterViewState extends State<RegisterView> {
   @override
   void initState() {
     super.initState();
-    var defaultListener = ListenerView(
+    ListenerView(
       viewModel: context.read<RegisterViewModel>(),
-    );
-    defaultListener.listener(
+    ).listener(
       context: context,
       successCallback: (viewModel, listenerView) {
         listenerView.dispose();

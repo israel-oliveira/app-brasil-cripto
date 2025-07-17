@@ -14,3 +14,11 @@ class EmailAlreadyAuthException extends AuthException {
 class NullUserAuthException extends AuthException {
   NullUserAuthException() : super('Não foi possível autenticar o usuário');
 }
+
+class UserNotFoundAuthException extends AuthException {
+  UserNotFoundAuthException() : super('Usuário não encontrado');
+}
+
+class InvalidCredentialAuthException extends AuthException {
+  InvalidCredentialAuthException() : super('Senha ou e-mail inválido');
+}

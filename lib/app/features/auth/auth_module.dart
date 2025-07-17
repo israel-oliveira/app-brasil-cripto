@@ -14,10 +14,15 @@ class AuthModule extends AppModule {
           '/register': (_) => const RegisterView(),
         },
         bindings: [
-          Provider(create: (_) => LoginViewModel()),
           Provider(
-            create: (context) =>
-                RegisterViewModel(userRepository: context.read<UserRepository>()),
+            create: (context) => LoginViewModel(
+              userRepository: context.read<UserRepository>(),
+            ),
+          ),
+          Provider(
+            create: (context) => RegisterViewModel(
+              userRepository: context.read<UserRepository>(),
+            ),
           ),
         ],
       );

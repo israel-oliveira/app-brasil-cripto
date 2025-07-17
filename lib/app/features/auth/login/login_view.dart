@@ -1,10 +1,45 @@
+import 'dart:developer';
+
+import 'package:app_cripto/app/core/ui/helpers/notifier/listener_view.dart';
 import 'package:app_cripto/app/core/ui/widgets/app_field.dart';
 import 'package:app_cripto/app/core/ui/widgets/app_logo.dart';
+import 'package:app_cripto/app/features/auth/login/login_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sign_in_button/sign_in_button.dart';
+import 'package:validatorless/validatorless.dart';
 
-class LoginView extends StatelessWidget {
+class LoginView extends StatefulWidget {
   const LoginView({super.key});
+
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    ListenerView(
+      viewModel: context.read<LoginViewModel>(),
+    ).listener(
+      context: context,
+      successCallback: (viewModel, listenerView) {
+        log('Login efetuado com sucesso');
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,15 +70,29 @@ class LoginView extends StatelessWidget {
                         vertical: 20,
                       ),
                       child: Form(
+                        key: _formKey,
                         child: Column(
                           children: [
                             AppField(
                               label: 'E-mail',
+                              controller: _emailController,
+                              validator: Validatorless.multiple([
+                                Validatorless.required('E-mail obrigatório'),
+                                Validatorless.email('E-mail inválido'),
+                              ]),
                             ),
                             SizedBox.square(dimension: 20),
                             AppField(
                               label: 'Senha',
                               obscureText: true,
+                              controller: _passwordController,
+                              validator: Validatorless.multiple([
+                                Validatorless.required('Senha obrigatória'),
+                                Validatorless.min(
+                                  6,
+                                  'Senha deve ter pelo menos 6 caracteres',
+                                ),
+                              ]),
                             ),
                             SizedBox.square(dimension: 10),
                             Row(
@@ -54,7 +103,19 @@ class LoginView extends StatelessWidget {
                                   child: Text('Esqueceu sua senha?'),
                                 ),
                                 ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    final isValid =
+                                        _formKey.currentState?.validate() ??
+                                        false;
+                                    if (isValid) {
+                                      final email = _emailController.text;
+                                      final password = _passwordController.text;
+                                      context.read<LoginViewModel>().login(
+                                        email,
+                                        password,
+                                      );
+                                    }
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),
