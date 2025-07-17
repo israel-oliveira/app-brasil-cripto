@@ -29,7 +29,7 @@ class RegisterView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Todo List',
+              'Brasil Cripto',
               style: TextStyle(fontSize: 12, color: context.primaryColor),
             ),
             Text(
@@ -41,7 +41,7 @@ class RegisterView extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          Container(
+          SizedBox(
             height: MediaQuery.sizeOf(context).width * 0.5,
             child: FittedBox(
               fit: BoxFit.fitHeight,
