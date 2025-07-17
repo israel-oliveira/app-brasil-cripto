@@ -61,6 +61,11 @@ class UserServiceImp implements UserService {
     } on FirebaseAuthException catch (e, s) {
       debugPrint(e.toString());
       debugPrint(s.toString());
+
+      if(e.code == 'invalid-email') {
+        throw InvalidEmailAuthException();
+      }
+
       throw AuthException('Reset password failed: ${e.message}');
     }
   }

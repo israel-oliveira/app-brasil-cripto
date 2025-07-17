@@ -60,5 +60,6 @@ abstract class AppBaseViewModelBase with Store {
   void showLoadAndResetState() {
     setState(AppState.loading);
     setError(null);
+    setInfoMessage(null);
   }
 }

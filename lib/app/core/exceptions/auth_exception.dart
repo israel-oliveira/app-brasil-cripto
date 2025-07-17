@@ -22,3 +22,6 @@ class UserNotFoundAuthException extends AuthException {
 class InvalidCredentialAuthException extends AuthException {
   InvalidCredentialAuthException() : super('Senha ou e-mail inválido');
 }
+class InvalidEmailAuthException extends AuthException {
+  InvalidEmailAuthException() : super('E-mail inválido');
+}
