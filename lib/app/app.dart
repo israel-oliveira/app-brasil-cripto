@@ -1,5 +1,6 @@
 import 'package:app_cripto/app/core/navigator/app_navigator.dart';
 import 'package:app_cripto/app/core/ui/app_theme.dart';
+import 'package:app_cripto/app/features/auth/auth_module.dart';
 import 'package:app_cripto/app/features/home/home_module.dart';
 import 'package:app_cripto/app/features/splash/splash_view.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,10 @@ class App extends StatelessWidget {
         title: 'Brasil Cripto',
         theme: AppTheme.theme,
         navigatorKey: AppNavigator.navigatorKey,
-        routes: {...HomeModule().routers},
+        routes: {
+          ...HomeModule().routers,
+          ...AuthModule().routers,
+        },
         home: SplashView(),
       ),
     );

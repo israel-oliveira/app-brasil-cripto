@@ -21,8 +21,14 @@ class LoginView extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    SizedBox.square(dimension: 10),
-                    AppLogo(),
+                    SizedBox.square(dimension: 90),
+                    SizedBox(
+                      height: MediaQuery.sizeOf(context).width * 0.4,
+                      child: FittedBox(
+                        fit: BoxFit.fitHeight,
+                        child: AppLogo(),
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 40,
