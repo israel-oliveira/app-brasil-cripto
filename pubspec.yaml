@@ -42,6 +42,7 @@ dependencies:
   sign_in_button: ^4.0.1
   result_dart: ^2.1.1
   validatorless: ^1.2.4
+  flutter_overlay_loader: ^2.0.0
 
 dev_dependencies:
   flutter_test:

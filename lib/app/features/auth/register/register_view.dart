@@ -1,10 +1,9 @@
-import 'package:app_cripto/app/core/enum/app_state_enum.dart';
 import 'package:app_cripto/app/core/ui/extensions/theme_extension.dart';
+import 'package:app_cripto/app/core/ui/helpers/notifier/listener_view.dart';
 import 'package:app_cripto/app/core/ui/widgets/app_field.dart';
 import 'package:app_cripto/app/core/ui/widgets/app_logo.dart';
 import 'package:app_cripto/app/features/auth/register/register_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:validatorless/validatorless.dart';
 
@@ -21,35 +20,25 @@ class _RegisterViewState extends State<RegisterView> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-  late ReactionDisposer _disposer;
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
-    _disposer();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-
-    _disposer = reaction<AppState>(
-      (_) => context.read<RegisterViewModel>().state,
-      (state) {
-        final controller = context.read<RegisterViewModel>();
-        final error = controller.error;
-        if (state.isSuccess) {
-          Navigator.of(context).pop();
-        } else if (error != null && error.isNotEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(error),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
+    var defaultListener = ListenerView(
+      viewModel: context.read<RegisterViewModel>(),
+    );
+    defaultListener.listener(
+      context: context,
+      successCallback: (viewModel, listenerView) {
+        listenerView.dispose();
+        Navigator.of(context).pop();
       },
     );
   }
