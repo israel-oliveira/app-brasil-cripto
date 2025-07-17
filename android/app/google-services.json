@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "508580021259",
+    "project_id": "app-cripto-ce4ff",
+    "storage_bucket": "app-cripto-ce4ff.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:508580021259:android:7fcb725a2db6532f3ab30e",
+        "android_client_info": {
+          "package_name": "com.brasilcard.devteste.app_cripto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "508580021259-09eop7ncnugbuolg78rld3v9ohgnsvhq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.brasilcard.devteste.app_cripto",
+            "certificate_hash": "388d305d561caf907bee09dd1527249e5ffd58f1"
+          }
+        },
+        {
+          "client_id": "508580021259-eseguobmtj73bo4a5vljhmcbo3utdqkd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBrXF86wjWvUNl509P08HituI1FqqfEoo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "508580021259-eseguobmtj73bo4a5vljhmcbo3utdqkd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "508580021259-33taa9o4n4serdrfv00n3outlfi81aca.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.brasilcard.devteste.appCripto"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
