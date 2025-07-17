@@ -36,4 +36,17 @@ class UserRepositoryImp extends UserRepository {
       return Failure(e);
     }
   }
+
+  @override
+  AsyncResult<String> resetPassword(String email) async {
+    try {
+      await _userService.resetPassword(email);
+      return Success(
+        'Se este e-mail estiver cadastrado, '
+        'você receberá as instruções para resetar a senha.',
+      );
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
 }

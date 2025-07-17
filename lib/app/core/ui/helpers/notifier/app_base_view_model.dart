@@ -23,6 +23,23 @@ abstract class AppBaseViewModelBase with Store {
   }
 
   @observable
+  String? _infoMessage;
+
+  @computed
+  String? get infoMessage => _infoMessage;
+
+  @action
+  void setInfoMessage(String? message) {
+    _infoMessage = message;
+  }
+
+  @action
+  void successInfo(String message) {
+    setInfoMessage(message);
+    setState(AppState.success);
+  }
+
+  @observable
   AppState _state = AppState.initial;
 
   @computed

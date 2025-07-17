@@ -8,6 +8,7 @@ import 'package:mobx/mobx.dart';
 class ListenerView {
   final AppBaseViewModel viewModel;
   late ReactionDisposer _disposer;
+  late ReactionDisposer _disposerInfo;
 
   ListenerView({required this.viewModel});
 
@@ -16,6 +17,14 @@ class ListenerView {
     required SuccesssVoidCallback successCallback,
     ErrorVoidCallback? errorCallback,
   }) {
+    _disposerInfo = reaction<String?>(
+      (_) => viewModel.infoMessage,
+      (infoMessage) {
+        if (infoMessage != null) {
+          Messages.of(context).showInfo(infoMessage);
+        }
+      },
+    );
     _disposer = reaction<AppState>(
       (_) => viewModel.state,
       (state) {
@@ -26,9 +35,9 @@ class ListenerView {
         }
 
         if (viewModel.state.isError) {
-          if(errorCallback != null) {
+          if (errorCallback != null) {
             errorCallback(viewModel, this);
-          } 
+          }
           Messages.of(context).showError(viewModel.error ?? 'Ocorreu um erro');
           return;
         }
@@ -43,6 +52,7 @@ class ListenerView {
 
   void dispose() {
     _disposer();
+    _disposerInfo();
   }
 }
 

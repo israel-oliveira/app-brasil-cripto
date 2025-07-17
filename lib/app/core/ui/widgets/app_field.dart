@@ -8,6 +8,7 @@ class AppField extends StatelessWidget {
     this.suffixIconButton,
     this.controller,
     this.validator,
+    this.focusNode,
   }) : assert(
          obscureText ? suffixIconButton == null : true,
          'Obscure text não pode ser enviado em conjunto com suffixIconButton',
@@ -20,6 +21,7 @@ class AppField extends StatelessWidget {
   final ValueNotifier<bool> obscureTextNotifier;
   final TextEditingController? controller;
   final FormFieldValidator<String>? validator;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class AppField extends StatelessWidget {
         return TextFormField(
           controller: controller,
           validator: validator,
+          focusNode: focusNode,
           decoration: InputDecoration(
             labelText: label,
             labelStyle: TextStyle(fontSize: 15, color: Colors.black),

@@ -11,7 +11,7 @@ abstract class LoginViewModelBase extends AppBaseViewModel with Store {
   LoginViewModelBase({required UserRepository userRepository})
     : _userRepository = userRepository;
 
-  Future<void> login(String email, String password) async{
+  Future<void> login(String email, String password) async {
     showLoadAndResetState();
     final result = await _userRepository.login(email, password);
     result.fold(
@@ -23,6 +23,23 @@ abstract class LoginViewModelBase extends AppBaseViewModel with Store {
           setError(error.message);
         } else {
           setError('Erro ao realizar login');
+        }
+      },
+    );
+  }
+
+  Future<void> resetPassword(String email) async {
+    showLoadAndResetState();
+    final result = await _userRepository.resetPassword(email);
+    result.fold(
+      (msg) {
+        successInfo(msg);
+      },
+      (error) {
+        if (error is AuthException) {
+          setError(error.message);
+        } else {
+          setError('Erro ao enviar e-mail de redefinição de senha');
         }
       },
     );

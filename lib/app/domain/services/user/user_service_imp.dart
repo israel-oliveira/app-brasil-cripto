@@ -53,4 +53,15 @@ class UserServiceImp implements UserService {
       }
     }
   }
+  
+  @override
+  Future<void> resetPassword(String email) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e, s) {
+      debugPrint(e.toString());
+      debugPrint(s.toString());
+      throw AuthException('Reset password failed: ${e.message}');
+    }
+  }
 }

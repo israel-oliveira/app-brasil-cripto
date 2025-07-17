@@ -23,6 +23,13 @@ mixin _$AppBaseViewModel on AppBaseViewModelBase, Store {
     () => super.hasError,
     name: 'AppBaseViewModelBase.hasError',
   )).value;
+  Computed<String?>? _$infoMessageComputed;
+
+  @override
+  String? get infoMessage => (_$infoMessageComputed ??= Computed<String?>(
+    () => super.infoMessage,
+    name: 'AppBaseViewModelBase.infoMessage',
+  )).value;
   Computed<AppState>? _$stateComputed;
 
   @override
@@ -46,6 +53,24 @@ mixin _$AppBaseViewModel on AppBaseViewModelBase, Store {
   set _error(String? value) {
     _$_errorAtom.reportWrite(value, super._error, () {
       super._error = value;
+    });
+  }
+
+  late final _$_infoMessageAtom = Atom(
+    name: 'AppBaseViewModelBase._infoMessage',
+    context: context,
+  );
+
+  @override
+  String? get _infoMessage {
+    _$_infoMessageAtom.reportRead();
+    return super._infoMessage;
+  }
+
+  @override
+  set _infoMessage(String? value) {
+    _$_infoMessageAtom.reportWrite(value, super._infoMessage, () {
+      super._infoMessage = value;
     });
   }
 
@@ -79,6 +104,30 @@ mixin _$AppBaseViewModel on AppBaseViewModelBase, Store {
     );
     try {
       return super.setError(error);
+    } finally {
+      _$AppBaseViewModelBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setInfoMessage(String? message) {
+    final _$actionInfo = _$AppBaseViewModelBaseActionController.startAction(
+      name: 'AppBaseViewModelBase.setInfoMessage',
+    );
+    try {
+      return super.setInfoMessage(message);
+    } finally {
+      _$AppBaseViewModelBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void successInfo(String message) {
+    final _$actionInfo = _$AppBaseViewModelBaseActionController.startAction(
+      name: 'AppBaseViewModelBase.successInfo',
+    );
+    try {
+      return super.successInfo(message);
     } finally {
       _$AppBaseViewModelBaseActionController.endAction(_$actionInfo);
     }
@@ -137,6 +186,7 @@ mixin _$AppBaseViewModel on AppBaseViewModelBase, Store {
     return '''
 error: ${error},
 hasError: ${hasError},
+infoMessage: ${infoMessage},
 state: ${state}
     ''';
   }

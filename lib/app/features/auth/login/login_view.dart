@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:app_cripto/app/core/ui/helpers/notifier/listener_view.dart';
+import 'package:app_cripto/app/core/ui/messages.dart';
 import 'package:app_cripto/app/core/ui/widgets/app_field.dart';
 import 'package:app_cripto/app/core/ui/widgets/app_logo.dart';
 import 'package:app_cripto/app/features/auth/login/login_view_model.dart';
@@ -20,6 +21,7 @@ class _LoginViewState extends State<LoginView> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final FocusNode _emailFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -75,6 +77,7 @@ class _LoginViewState extends State<LoginView> {
                           children: [
                             AppField(
                               label: 'E-mail',
+                              focusNode: _emailFocusNode,
                               controller: _emailController,
                               validator: Validatorless.multiple([
                                 Validatorless.required('E-mail obrigatório'),
@@ -99,7 +102,18 @@ class _LoginViewState extends State<LoginView> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    if (_emailController.text.isEmpty) {
+                                      _emailFocusNode.requestFocus();
+                                      Messages.of(context).showError(
+                                        'Por favor, informe seu e-mail',
+                                      );
+                                      return;
+                                    }
+                                    context.read<LoginViewModel>().resetPassword(
+                                      _emailController.text,
+                                    );
+                                  },
                                   child: Text('Esqueceu sua senha?'),
                                 ),
                                 ElevatedButton(
