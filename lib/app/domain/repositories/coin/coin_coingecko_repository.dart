@@ -35,7 +35,7 @@ class CoinCoingeckoRepository implements CoinRepository {
       return Failure(e);
     }
   }
-  
+
   @override
   AsyncResult<bool> saveFavorites(CoinModel coin) async {
     try {
@@ -44,5 +44,14 @@ class CoinCoingeckoRepository implements CoinRepository {
     } on Exception catch (e) {
       return Failure(e);
     }
+  }
+
+  @override
+  AsyncResult<List<CoinMarketModel>> getFavoritiesCoinMarket(
+    List<CoinModel> coins,
+  ) async {
+    final result = await _coinService.getFavoritiesCoinMarket(coins);
+
+    return Success(result);
   }
 }

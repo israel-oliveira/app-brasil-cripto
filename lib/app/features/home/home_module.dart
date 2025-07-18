@@ -34,7 +34,11 @@ class HomeModule extends AppModule {
               coinRepository: context.read<CoinCoingeckoRepository>(),
             ),
           ),
-          Provider(create: (_) => FavoritesViewModel()),
+          Provider(
+            create: (context) => FavoritesViewModel(
+              coinRepository: context.read<CoinCoingeckoRepository>(),
+            ),
+          ),
         ],
       );
 }

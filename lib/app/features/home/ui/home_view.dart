@@ -1,5 +1,6 @@
 import 'package:app_cripto/app/core/enum/app_state_enum.dart';
 import 'package:app_cripto/app/core/ui/helpers/notifier/listener_view.dart';
+import 'package:app_cripto/app/core/ui/widgets/app_search.dart';
 import 'package:app_cripto/app/features/home/ui/home_view_model.dart';
 import 'package:app_cripto/app/features/home/ui/widgets/home_drawer.dart';
 import 'package:flutter/material.dart';
@@ -51,8 +52,8 @@ class _HomeViewState extends State<HomeView> {
         title: const Text('Cripto App'),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.of(context).pushNamed('/favoritas');
+        onPressed: () async {
+          await Navigator.of(context).pushNamed('/favoritas');
         },
         icon: const Icon(Icons.star),
         label: const Text('Favoritos'),
@@ -61,7 +62,7 @@ class _HomeViewState extends State<HomeView> {
       body: Center(
         child: Column(
           children: [
-            TextField(),
+            AppSearch(),
             Expanded(
               child: Observer(
                 builder: (context) {

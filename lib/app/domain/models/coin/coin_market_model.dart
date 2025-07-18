@@ -38,6 +38,22 @@ class CoinMarketModel extends CoinModel {
     );
   }
 
+  factory CoinMarketModel.fromFavoritiesJson(Map<String, dynamic> json) {
+    return CoinMarketModel(
+      id: json['id'],
+      name: json['name'],
+      symbol: json['symbol'],
+      isFavorite: true,
+      imageUrl: json['image'],
+      currentPrice: (json['current_price'] as num).toDouble(),
+      marketCap: (json['market_cap'] as num).toDouble(),
+      rank: json['market_cap_rank'],
+      totalVolume: int.tryParse(json['total_volume'].toString())  ?? 0,
+      priceChange24h: (json['price_change_24h'] as num).toDouble(),
+      priceChangePercentage24h: (json['price_change_percentage_24h'] as num).toDouble(),
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

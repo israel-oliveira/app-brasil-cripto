@@ -90,4 +90,23 @@ class CoinCoingeckoService implements CoinService {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
+  
+  @override
+  Future<List<CoinMarketModel>> getFavoritiesCoinMarket(List<CoinModel> coins) async {
+    if (coins.isEmpty) {
+      return [];
+    }
+    
+    final ids = coins.map((coin) => coin.id).join(',');
+    final response = await _client.get(
+      '/coins/markets',
+      queryParameters: {
+      'vs_currency': 'brl',
+      'ids': ids,
+      },
+    );
+    return (response.data as List)
+      .map((coin) => CoinMarketModel.fromFavoritiesJson(coin))
+      .toList();
+  }
 }

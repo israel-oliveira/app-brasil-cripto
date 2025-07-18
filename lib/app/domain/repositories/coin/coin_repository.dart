@@ -7,4 +7,5 @@ abstract class CoinRepository {
   AsyncResult<List<CoinModel>> getFavorites();
   AsyncResult<bool> saveFavorites(CoinModel coin);
   AsyncResult<List<CoinMarketModel>> getCoinMarketByPage(int page);
+  AsyncResult<List<CoinMarketModel>> getFavoritiesCoinMarket(List<CoinModel> coins);
 }

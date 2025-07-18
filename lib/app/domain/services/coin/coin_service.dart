@@ -6,4 +6,5 @@ abstract class CoinService {
   Future<List<CoinModel>> getFavorities();
   Future<void> updateFavorities(CoinModel coins);
   Future<List<CoinMarketModel>> getCoinMarketByPage(int page);
+  Future<List<CoinMarketModel>> getFavoritiesCoinMarket(List<CoinModel> coins);
 }
