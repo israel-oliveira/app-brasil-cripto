@@ -7,7 +7,6 @@ import 'package:app_cripto/app/core/ui/widgets/app_logo.dart';
 import 'package:app_cripto/app/features/auth/login/login_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sign_in_button/sign_in_button.dart';
 import 'package:validatorless/validatorless.dart';
 
 class LoginView extends StatefulWidget {
@@ -161,18 +160,7 @@ class _LoginViewState extends State<LoginView> {
                         child: Column(
                           children: [
                             SizedBox.square(dimension: 30),
-                            SignInButton(
-                              Buttons.google,
-                              text: 'Continue com o Google',
-                              padding: EdgeInsets.all(5),
-                              shape: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: BorderSide.none,
-                              ),
-                              onPressed: () {
-                                context.read<LoginViewModel>().googleLogin();
-                              },
-                            ),
+                            
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                                children: [

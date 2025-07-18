@@ -51,16 +51,13 @@ class UserRepositoryImp extends UserRepository {
   }
   
   @override
-  AsyncResult<User> googleLogin() async {
+  AsyncResult<String> logout() async {
     try {
-      final user = await _userService.googleLogin();
-      if (user != null) {
-        return Success(user);
-      } else {
-        return Failure(NullUserAuthException());
-      }
+      await _userService.logout();
+      return Success('Deslogado com sucesso.');
     } on Exception catch (e) {
       return Failure(e);
     }
   }
+  
 }

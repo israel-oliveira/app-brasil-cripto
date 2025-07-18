@@ -34,3 +34,6 @@ class InvalidIdTokenAuthException extends AuthException {
         'Consulte o suporte técnico.',
       );
 }
+class UserCancelledAuthException extends AuthException {
+  UserCancelledAuthException() : super('Login cancelado pelo usuário');
+}
