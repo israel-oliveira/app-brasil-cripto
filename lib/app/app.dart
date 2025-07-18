@@ -1,4 +1,5 @@
 import 'package:app_cripto/app/core/client/dio_client.dart';
+import 'package:app_cripto/app/core/database/sql_adm_connection.dart';
 import 'package:app_cripto/app/core/database/sql_connection_factory.dart';
 import 'package:app_cripto/app/core/navigator/app_navigator.dart';
 import 'package:app_cripto/app/core/ui/app_theme.dart';
@@ -15,8 +16,28 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_cripto/app/core/auth/app_auth_provider.dart';
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
   const App({super.key});
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+
+  final _sqlAdmConnection = SqlAdmConnection();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(_sqlAdmConnection);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(_sqlAdmConnection);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
