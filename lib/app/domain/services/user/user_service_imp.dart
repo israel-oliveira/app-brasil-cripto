@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:app_cripto/app/core/exceptions/auth_exception.dart';
 import 'package:app_cripto/app/domain/services/user/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class UserServiceImp implements UserService {
   final FirebaseAuth _firebaseAuth;
@@ -53,7 +56,7 @@ class UserServiceImp implements UserService {
       }
     }
   }
-  
+
   @override
   Future<void> resetPassword(String email) async {
     try {
@@ -62,11 +65,72 @@ class UserServiceImp implements UserService {
       debugPrint(e.toString());
       debugPrint(s.toString());
 
-      if(e.code == 'invalid-email') {
+      if (e.code == 'invalid-email') {
         throw InvalidEmailAuthException();
       }
 
       throw AuthException('Reset password failed: ${e.message}');
     }
+  }
+
+  @override
+  Future<User?> googleLogin() async {
+    final GoogleSignIn googleSignIn = GoogleSignIn.instance;
+    final completer = Completer<User?>();
+    StreamSubscription? streamSubscription;
+
+    googleSignIn.initialize(
+      serverClientId: '684838539497-86ah0vtu0p92pp6sl4aks34gg6jjbofe.apps.googleusercontent.com'
+    );
+
+    streamSubscription = googleSignIn.authenticationEvents.listen(
+      (event) async {
+        try {
+          if (event is GoogleSignInAuthenticationEventSignIn) {
+            final googleAuth = event.user.authentication;
+            final idToken = googleAuth.idToken;
+
+            // Validação crucial
+            if (idToken == null) {
+              throw InvalidIdTokenAuthException();
+            }
+
+            final credential = GoogleAuthProvider.credential(
+              idToken: idToken,
+              accessToken: null,
+            );
+
+            final userCredential = await _firebaseAuth.signInWithCredential(
+              credential,
+            );
+            completer.complete(userCredential.user);
+          }
+        } catch (e) {
+          completer.completeError(e);
+        } finally {
+          streamSubscription?.cancel();
+        }
+      },
+      onError: (error) {
+        completer.completeError(error);
+        streamSubscription?.cancel();
+      },
+      onDone: () {
+        if (!completer.isCompleted) {
+          completer.complete(null);
+        }
+      },
+    );
+
+    try {
+      await googleSignIn.authenticate();
+    } catch (error) {
+      if (!completer.isCompleted) {
+        completer.completeError(error);
+        await streamSubscription.cancel();
+      }
+    }
+
+    return completer.future;
   }
 }

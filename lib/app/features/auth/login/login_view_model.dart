@@ -44,4 +44,21 @@ abstract class LoginViewModelBase extends AppBaseViewModel with Store {
       },
     );
   }
+
+  Future<void> googleLogin() async {
+    showLoadAndResetState();
+    final result = await _userRepository.googleLogin();
+    result.fold(
+      (user) {
+        success();
+      },
+      (error) {
+        if (error is AuthException) {
+          setError(error.message);
+        } else {
+          setError('Erro ao realizar login com o Google');
+        }
+      },
+    );
+  }
 }

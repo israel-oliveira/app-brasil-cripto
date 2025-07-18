@@ -22,6 +22,15 @@ class UserNotFoundAuthException extends AuthException {
 class InvalidCredentialAuthException extends AuthException {
   InvalidCredentialAuthException() : super('Senha ou e-mail inválido');
 }
+
 class InvalidEmailAuthException extends AuthException {
   InvalidEmailAuthException() : super('E-mail inválido');
+}
+
+class InvalidIdTokenAuthException extends AuthException {
+  InvalidIdTokenAuthException()
+    : super(
+        'O idToken do Google não foi obtido.\n'
+        'Consulte o suporte técnico.',
+      );
 }

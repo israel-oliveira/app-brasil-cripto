@@ -169,11 +169,13 @@ class _LoginViewState extends State<LoginView> {
                                 borderRadius: BorderRadius.circular(30),
                                 borderSide: BorderSide.none,
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                context.read<LoginViewModel>().googleLogin();
+                              },
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
+                               children: [
                                 Text('Não tem conta?'),
                                 TextButton(
                                   onPressed: () => Navigator.of(

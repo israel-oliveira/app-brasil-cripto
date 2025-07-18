@@ -36,7 +36,7 @@ abstract class AppBaseViewModelBase with Store {
   @action
   void successInfo(String message) {
     setInfoMessage(message);
-    setState(AppState.success);
+    setState(AppState.initial);
   }
 
   @observable

@@ -49,4 +49,18 @@ class UserRepositoryImp extends UserRepository {
       return Failure(e);
     }
   }
+  
+  @override
+  AsyncResult<User> googleLogin() async {
+    try {
+      final user = await _userService.googleLogin();
+      if (user != null) {
+        return Success(user);
+      } else {
+        return Failure(NullUserAuthException());
+      }
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
 }
