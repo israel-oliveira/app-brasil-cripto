@@ -8,9 +8,9 @@ class ClientException implements Exception {
 }
 
 class GetClientException extends ClientException {
-  GetClientException(String message) : super("Erro (GET): $message");
+  GetClientException(super.message);
 }
 
 class PostClientException extends ClientException {
-  PostClientException(String message) : super("Erro (POST): $message");
+  PostClientException(super.message);
 }

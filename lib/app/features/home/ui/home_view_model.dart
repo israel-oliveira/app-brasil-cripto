@@ -43,6 +43,8 @@ abstract class HomeViewModelBase extends AppBaseViewModel with Store {
 
     if (!hasError) {
       success();
+    }else{
+      setError(error ?? 'Não foi possível carregar os dados');
     }
   }
 
@@ -87,7 +89,7 @@ abstract class HomeViewModelBase extends AppBaseViewModel with Store {
       (coinMarketList) {
         _coinMarketList.addAll(coinMarketList);
         _page++;
-        _loadFavoritesCoin();
+        loadFavoritesCoin();
       },
       (error) {
         if (error is ClientException) {
@@ -99,6 +101,7 @@ abstract class HomeViewModelBase extends AppBaseViewModel with Store {
     );
   }
 
+  @action
   void _defineFavorities() {
     List<CoinMarketModel> tempValue = _coinMarketList;
 
@@ -113,10 +116,11 @@ abstract class HomeViewModelBase extends AppBaseViewModel with Store {
   }
 
   @action
-  Future<void> _loadFavoritesCoin() async {
+  Future<void> loadFavoritesCoin() async {
     final result = await _coinRepository.getFavorites();
     result.fold(
       (coins) {
+        _favoritiesCoin.clear();
         _favoritiesCoin.addAll(coins);
         _defineFavorities();
       },

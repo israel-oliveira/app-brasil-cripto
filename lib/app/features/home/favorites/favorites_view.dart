@@ -1,4 +1,7 @@
+import 'package:app_cripto/app/core/ui/extensions/theme_extension.dart';
 import 'package:app_cripto/app/core/ui/helpers/notifier/listener_view.dart';
+import 'package:app_cripto/app/core/ui/widgets/app_delete_dialog.dart';
+import 'package:app_cripto/app/core/ui/widgets/app_state_empty.dart';
 import 'package:app_cripto/app/features/home/favorites/favorites_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -37,6 +40,21 @@ class _FavoritesViewState extends State<FavoritesView> {
             Expanded(
               child: Observer(
                 builder: (context) {
+                  if (context
+                      .read<FavoritesViewModel>()
+                      .coinMarketFavoritesList
+                      .isEmpty) {
+                    return AppStateEmpty(
+                      child: TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text(
+                          'Voltar',
+                          style: TextStyle(color: context.primaryColor),
+                        ),
+                      ),
+                    );
+                  }
+
                   return ListView.separated(
                     itemCount: context
                         .read<FavoritesViewModel>()
@@ -52,17 +70,6 @@ class _FavoritesViewState extends State<FavoritesView> {
                       return ListTile(
                         title: Row(
                           children: [
-                            IconButton(
-                              onPressed: () => context
-                                  .read<FavoritesViewModel>()
-                                  .updateFavorities(coin),
-                              icon: Icon(
-                                Icons.star,
-                                color: coin.isFavorite
-                                    ? Colors.yellow
-                                    : Colors.grey,
-                              ),
-                            ),
                             ClipOval(
                               child: Image.network(
                                 coin.imageUrl,
@@ -94,6 +101,24 @@ class _FavoritesViewState extends State<FavoritesView> {
                               coin.symbol.toUpperCase(),
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () => AppDeleteDialog().show(
+                                context,
+                                title: 'Remover moeda',
+                                content:
+                                    'Deseja remover ${coin.name} das favoritas?',
+                                onConfirm: () {
+                                  context
+                                      .read<FavoritesViewModel>()
+                                      .updateFavorities(coin);
+                                },
+                              ),
+                              icon: Icon(
+                                Icons.delete_outline,
+                                color: Colors.red,
+                                size: 30,
                               ),
                             ),
                           ],

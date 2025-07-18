@@ -39,6 +39,11 @@ class DioClient {
         queryParameters: queryParameters,
       );
       return response;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 429) {
+        throw GetClientException('Limite de requisições atingido');
+      }
+      throw GetClientException(e.message ?? 'Erro ao obter dados');
     } catch (e) {
       throw GetClientException(e.toString());
     }

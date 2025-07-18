@@ -19,11 +19,12 @@ class CoinCoingeckoRepository implements CoinRepository {
 
   @override
   AsyncResult<List<CoinMarketModel>> getCoinMarketByPage(int page) async {
-    final result = await _coinService.getCoinMarketByPage(page);
-    if (result.isEmpty) {
-      return Failure(Exception('No coin market data found'));
+    try {
+      final result = await _coinService.getCoinMarketByPage(page);
+      return Success(result);
+    } on Exception catch (e) {
+      return Failure(e);
     }
-    return Success(result);
   }
 
   @override

@@ -106,16 +106,31 @@ mixin _$HomeViewModel on HomeViewModelBase, Store {
     return _$_loadCoinMarketAsyncAction.run(() => super._loadCoinMarket());
   }
 
-  late final _$_loadFavoritesCoinAsyncAction = AsyncAction(
-    'HomeViewModelBase._loadFavoritesCoin',
+  late final _$loadFavoritesCoinAsyncAction = AsyncAction(
+    'HomeViewModelBase.loadFavoritesCoin',
     context: context,
   );
 
   @override
-  Future<void> _loadFavoritesCoin() {
-    return _$_loadFavoritesCoinAsyncAction.run(
-      () => super._loadFavoritesCoin(),
+  Future<void> loadFavoritesCoin() {
+    return _$loadFavoritesCoinAsyncAction.run(() => super.loadFavoritesCoin());
+  }
+
+  late final _$HomeViewModelBaseActionController = ActionController(
+    name: 'HomeViewModelBase',
+    context: context,
+  );
+
+  @override
+  void _defineFavorities() {
+    final _$actionInfo = _$HomeViewModelBaseActionController.startAction(
+      name: 'HomeViewModelBase._defineFavorities',
     );
+    try {
+      return super._defineFavorities();
+    } finally {
+      _$HomeViewModelBaseActionController.endAction(_$actionInfo);
+    }
   }
 
   @override

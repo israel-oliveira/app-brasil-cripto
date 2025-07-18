@@ -18,10 +18,10 @@ class CoinCoingeckoService implements CoinService {
        _sqlConnectionFactory = sqlConnectionFactory;
 
   @override
-  Future<List<CoinModel>> getAll() async {
+  Future<List<CoinModel>> getAll([bool newLocal = false]) async {
     List<CoinModel> coins = await _getLocalCoins();
 
-    if (coins.isNotEmpty) {
+    if (coins.isNotEmpty && !newLocal) {
       log('Dados veio local');
       return coins;
     }
@@ -46,21 +46,25 @@ class CoinCoingeckoService implements CoinService {
         'page': page,
       },
     );
+
     return (response.data as List)
         .map((coin) => CoinMarketModel.fromJson(coin))
         .toList();
   }
 
   Future<void> _saveLocalCoins(List<CoinModel> coins) async {
-    final conn = await _sqlConnectionFactory.openConnection();
-    for (var coin in coins) {
-      await conn.insert(
+  final conn = await _sqlConnectionFactory.openConnection();
+
+  await conn.transaction((txn) async {
+    for (final coin in coins) {
+      await txn.insert(
         'coins',
         coin.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     }
-  }
+  });
+}
 
   Future<List<CoinModel>> _getLocalCoins() async {
     final conn = await _sqlConnectionFactory.openConnection();
@@ -69,44 +73,48 @@ class CoinCoingeckoService implements CoinService {
       return CoinModel.fromLocalJson(maps[i]);
     });
   }
-  
+
   @override
-  Future<List<CoinModel>> getFavorities() async{
+  Future<List<CoinModel>> getFavorities() async {
     final conn = await _sqlConnectionFactory.openConnection();
-    final List<Map<String, dynamic>> maps = await conn.query('coins', where: 'is_favorite = ?', whereArgs: [1]);
+    final List<Map<String, dynamic>> maps = await conn.query(
+      'coins',
+      where: 'is_favorite = ?',
+      whereArgs: [1],
+    );
     return List.generate(maps.length, (i) {
       return CoinModel.fromLocalJson(maps[i]);
     });
   }
-  
+
   @override
-  Future<void> updateFavorities(CoinModel coins) async {
+  Future<void> updateFavorities(CoinModel coin) async {
     final conn = await _sqlConnectionFactory.openConnection();
-    await conn.update(
+    await conn.insert(
       'coins',
-      coins.toFavoritesJson(),
-      where: 'coin_id = ?',
-      whereArgs: [coins.id],
+      coin.toJson(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
-  
+
   @override
-  Future<List<CoinMarketModel>> getFavoritiesCoinMarket(List<CoinModel> coins) async {
+  Future<List<CoinMarketModel>> getFavoritiesCoinMarket(
+    List<CoinModel> coins,
+  ) async {
     if (coins.isEmpty) {
       return [];
     }
-    
+
     final ids = coins.map((coin) => coin.id).join(',');
     final response = await _client.get(
       '/coins/markets',
       queryParameters: {
-      'vs_currency': 'brl',
-      'ids': ids,
+        'vs_currency': 'brl',
+        'ids': ids,
       },
     );
     return (response.data as List)
-      .map((coin) => CoinMarketModel.fromFavoritiesJson(coin))
-      .toList();
+        .map((coin) => CoinMarketModel.fromFavoritiesJson(coin))
+        .toList();
   }
 }

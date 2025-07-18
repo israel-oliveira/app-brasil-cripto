@@ -54,6 +54,9 @@ class _HomeViewState extends State<HomeView> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           await Navigator.of(context).pushNamed('/favoritas');
+          if (context.mounted) {
+            await context.read<HomeViewModel>().loadFavoritesCoin();
+          }
         },
         icon: const Icon(Icons.star),
         label: const Text('Favoritos'),

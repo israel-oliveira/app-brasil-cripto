@@ -24,11 +24,8 @@ abstract class FavoritesViewModelBase extends AppBaseViewModel with Store {
   @action
   Future<void> load() async {
     showLoadAndResetState();
-    await Future.wait([_loadFavoritiesCoinMarket()]);
+    _loadFavoritiesCoinMarket();
 
-    if (!hasError) {
-      success();
-    }
   }
 
   @action
@@ -37,6 +34,7 @@ abstract class FavoritesViewModelBase extends AppBaseViewModel with Store {
     result.fold(
       (coinMarketList) {
         _coinMarketFavoritesList.addAll(coinMarketList);
+        success();
       },
       (error) {
         if (error is ClientException) {
