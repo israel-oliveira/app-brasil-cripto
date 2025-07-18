@@ -12,10 +12,6 @@ class SplashView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             AppLogo(),
-            TextButton(
-              onPressed: () => Navigator.of(context).pushNamed('/login'),
-              child: Text('Login'),
-            ),
           ],
         ),
       ),

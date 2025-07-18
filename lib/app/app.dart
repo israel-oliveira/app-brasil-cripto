@@ -10,6 +10,7 @@ import 'package:app_cripto/app/features/splash/splash_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:app_cripto/app/core/auth/app_auth_provider.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -19,8 +20,21 @@ class App extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider(create: (_) => FirebaseAuth.instance),
-        Provider<UserService>(create: (context) => UserServiceImp(firebaseAuth: context.read<FirebaseAuth>())),
-        Provider<UserRepository>(create: (context) => UserRepositoryImp(userService: context.read<UserService>())),
+        Provider<UserService>(
+          create: (context) =>
+              UserServiceImp(firebaseAuth: context.read<FirebaseAuth>()),
+        ),
+        Provider<UserRepository>(
+          create: (context) =>
+              UserRepositoryImp(userService: context.read<UserService>()),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => AppAuthProvider(
+            firebaseAuth: context.read<FirebaseAuth>(),
+            userRepository: context.read<UserRepository>(),
+          )..loadListener(),
+          lazy: false,
+        ),
       ],
       child: MaterialApp(
         title: 'Brasil Cripto',
