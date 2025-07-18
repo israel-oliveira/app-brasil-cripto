@@ -1,4 +1,5 @@
 import 'package:app_cripto/app/core/client/dio_client.dart';
+import 'package:app_cripto/app/core/database/sql_connection_factory.dart';
 import 'package:app_cripto/app/core/navigator/app_navigator.dart';
 import 'package:app_cripto/app/core/ui/app_theme.dart';
 import 'package:app_cripto/app/domain/repositories/user/user_repository.dart';
@@ -22,9 +23,11 @@ class App extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider(create: (_) => FirebaseAuth.instance),
+        Provider(create: (_) => SqlConnectionFactory()),
         Provider<UserService>(
           create: (context) =>
               UserServiceImp(firebaseAuth: context.read<FirebaseAuth>()),
+          lazy: false,
         ),
         Provider<UserRepository>(
           create: (context) =>
