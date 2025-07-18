@@ -4,5 +4,7 @@ import 'package:result_dart/result_dart.dart';
 
 abstract class CoinRepository {
   AsyncResult<List<CoinModel>> getAllCoins();
+  AsyncResult<List<CoinModel>> getFavorites();
+  AsyncResult<bool> saveFavorites(CoinModel coin);
   AsyncResult<List<CoinMarketModel>> getCoinMarketByPage(int page);
 }

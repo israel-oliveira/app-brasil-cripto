@@ -2,7 +2,7 @@ class CoinModel {
   final String id;
   final String name;
   final String symbol;
-  final bool isFavorite;
+  bool isFavorite;
 
   CoinModel({
     required this.id,
@@ -17,6 +17,30 @@ class CoinModel {
       name: json['name'],
       symbol: json['symbol'],
     );
+  }
+
+   factory CoinModel.fromLocalJson(Map<String, dynamic> json) {
+    return CoinModel(
+      id: json['coin_id'],
+      name: json['name'],
+      symbol: json['symbol'],
+      isFavorite: json['is_favorite'] == 1,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'coin_id': id,
+      'name': name,
+      'symbol': symbol,
+      'is_favorite': isFavorite ? 1 : 0,
+    };
+  }
+
+  Map<String, dynamic> toFavoritesJson() {
+    return {
+      'is_favorite': isFavorite ? 1 : 0,
+    };
   }
 
   @override

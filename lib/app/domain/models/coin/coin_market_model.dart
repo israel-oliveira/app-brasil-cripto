@@ -32,7 +32,7 @@ class CoinMarketModel extends CoinModel {
       currentPrice: (json['current_price'] as num).toDouble(),
       marketCap: (json['market_cap'] as num).toDouble(),
       rank: json['market_cap_rank'],
-      totalVolume: json['total_volume'] ?? 0,
+      totalVolume: int.tryParse(json['total_volume'].toString())  ?? 0,
       priceChange24h: (json['price_change_24h'] as num).toDouble(),
       priceChangePercentage24h: (json['price_change_percentage_24h'] as num).toDouble(),
     );

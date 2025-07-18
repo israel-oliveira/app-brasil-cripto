@@ -1,19 +1,38 @@
+import 'dart:developer';
+
 import 'package:app_cripto/app/core/client/dio_client.dart';
+import 'package:app_cripto/app/core/database/sql_connection_factory.dart';
 import 'package:app_cripto/app/domain/models/coin/coin_market_model.dart';
 import 'package:app_cripto/app/domain/models/coin/coin_model.dart';
 import 'package:app_cripto/app/domain/services/coin/coin_service.dart';
+import 'package:sqflite/sqflite.dart';
 
 class CoinCoingeckoService implements CoinService {
   final DioClient _client;
+  final SqlConnectionFactory _sqlConnectionFactory;
 
-  CoinCoingeckoService({required DioClient client}) : _client = client;
+  CoinCoingeckoService({
+    required DioClient client,
+    required SqlConnectionFactory sqlConnectionFactory,
+  }) : _client = client,
+       _sqlConnectionFactory = sqlConnectionFactory;
 
   @override
   Future<List<CoinModel>> getAll() async {
+    List<CoinModel> coins = await _getLocalCoins();
+
+    if (coins.isNotEmpty) {
+      log('Dados veio local');
+      return coins;
+    }
+
     final response = await _client.get('/coins/list');
-    return (response.data as List)
+    final value = (response.data as List)
         .map((coin) => CoinModel.fromJson(coin))
         .toList();
+    await _saveLocalCoins(value);
+    log('Dados veio da API');
+    return value;
   }
 
   @override
@@ -30,5 +49,45 @@ class CoinCoingeckoService implements CoinService {
     return (response.data as List)
         .map((coin) => CoinMarketModel.fromJson(coin))
         .toList();
+  }
+
+  Future<void> _saveLocalCoins(List<CoinModel> coins) async {
+    final conn = await _sqlConnectionFactory.openConnection();
+    for (var coin in coins) {
+      await conn.insert(
+        'coins',
+        coin.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+  }
+
+  Future<List<CoinModel>> _getLocalCoins() async {
+    final conn = await _sqlConnectionFactory.openConnection();
+    final List<Map<String, dynamic>> maps = await conn.query('coins');
+    return List.generate(maps.length, (i) {
+      return CoinModel.fromLocalJson(maps[i]);
+    });
+  }
+  
+  @override
+  Future<List<CoinModel>> getFavorities() async{
+    final conn = await _sqlConnectionFactory.openConnection();
+    final List<Map<String, dynamic>> maps = await conn.query('coins', where: 'is_favorite = ?', whereArgs: [1]);
+    return List.generate(maps.length, (i) {
+      return CoinModel.fromLocalJson(maps[i]);
+    });
+  }
+  
+  @override
+  Future<void> updateFavorities(CoinModel coins) async {
+    final conn = await _sqlConnectionFactory.openConnection();
+    await conn.update(
+      'coins',
+      coins.toFavoritesJson(),
+      where: 'coin_id = ?',
+      whereArgs: [coins.id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 }

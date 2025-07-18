@@ -17,6 +17,14 @@ mixin _$HomeViewModel on HomeViewModelBase, Store {
         () => super.coinMarketList,
         name: 'HomeViewModelBase.coinMarketList',
       )).value;
+  Computed<ObservableList<CoinModel>>? _$favoritiesCoinComputed;
+
+  @override
+  ObservableList<CoinModel> get favoritiesCoin =>
+      (_$favoritiesCoinComputed ??= Computed<ObservableList<CoinModel>>(
+        () => super.favoritiesCoin,
+        name: 'HomeViewModelBase.favoritiesCoin',
+      )).value;
 
   late final _$_coinMarketListAtom = Atom(
     name: 'HomeViewModelBase._coinMarketList',
@@ -36,6 +44,24 @@ mixin _$HomeViewModel on HomeViewModelBase, Store {
     });
   }
 
+  late final _$_favoritiesCoinAtom = Atom(
+    name: 'HomeViewModelBase._favoritiesCoin',
+    context: context,
+  );
+
+  @override
+  ObservableList<CoinModel> get _favoritiesCoin {
+    _$_favoritiesCoinAtom.reportRead();
+    return super._favoritiesCoin;
+  }
+
+  @override
+  set _favoritiesCoin(ObservableList<CoinModel> value) {
+    _$_favoritiesCoinAtom.reportWrite(value, super._favoritiesCoin, () {
+      super._favoritiesCoin = value;
+    });
+  }
+
   late final _$loadAsyncAction = AsyncAction(
     'HomeViewModelBase.load',
     context: context,
@@ -44,6 +70,18 @@ mixin _$HomeViewModel on HomeViewModelBase, Store {
   @override
   Future<void> load() {
     return _$loadAsyncAction.run(() => super.load());
+  }
+
+  late final _$updateFavoritiesAsyncAction = AsyncAction(
+    'HomeViewModelBase.updateFavorities',
+    context: context,
+  );
+
+  @override
+  Future<void> updateFavorities(CoinModel coin) {
+    return _$updateFavoritiesAsyncAction.run(
+      () => super.updateFavorities(coin),
+    );
   }
 
   late final _$infiniteScrollLoadAsyncAction = AsyncAction(
@@ -68,10 +106,23 @@ mixin _$HomeViewModel on HomeViewModelBase, Store {
     return _$_loadCoinMarketAsyncAction.run(() => super._loadCoinMarket());
   }
 
+  late final _$_loadFavoritesCoinAsyncAction = AsyncAction(
+    'HomeViewModelBase._loadFavoritesCoin',
+    context: context,
+  );
+
+  @override
+  Future<void> _loadFavoritesCoin() {
+    return _$_loadFavoritesCoinAsyncAction.run(
+      () => super._loadFavoritesCoin(),
+    );
+  }
+
   @override
   String toString() {
     return '''
-coinMarketList: ${coinMarketList}
+coinMarketList: ${coinMarketList},
+favoritiesCoin: ${favoritiesCoin}
     ''';
   }
 }

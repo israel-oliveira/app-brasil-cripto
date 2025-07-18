@@ -15,10 +15,17 @@ abstract class HomeViewModelBase extends AppBaseViewModel with Store {
     : _coinRepository = coinRepository;
 
   @observable
-  ObservableList<CoinMarketModel> _coinMarketList = ObservableList<CoinMarketModel>();
+  ObservableList<CoinMarketModel> _coinMarketList =
+      ObservableList<CoinMarketModel>();
 
   @computed
   ObservableList<CoinMarketModel> get coinMarketList => _coinMarketList;
+
+  @observable
+  ObservableList<CoinModel> _favoritiesCoin = ObservableList<CoinModel>();
+
+  @computed
+  ObservableList<CoinModel> get favoritiesCoin => _favoritiesCoin;
 
   List<CoinModel> _coins = [];
 
@@ -40,6 +47,31 @@ abstract class HomeViewModelBase extends AppBaseViewModel with Store {
   }
 
   @action
+  Future<void> updateFavorities(CoinModel coin) async {
+    coin.isFavorite = !coin.isFavorite;
+    final result = await _coinRepository.saveFavorites(coin);
+    result.fold(
+      (success) {
+        if (success) {
+          if(coin.isFavorite) {
+            _favoritiesCoin.add(coin);
+          } else {
+            _favoritiesCoin.removeWhere((c) => c.id == coin.id);
+          }
+          _defineFavorities();
+        }
+      },
+      (error) {
+        if (error is ClientException) {
+          setError(error.message);
+        } else {
+          setError('Não foi possivel atualizar os dados');
+        }
+      },
+    );
+  }
+
+  @action
   Future<void> infiniteScrollLoad() async {
     showLoadAndResetState();
     if (_coinMarketList.isNotEmpty) {
@@ -55,6 +87,38 @@ abstract class HomeViewModelBase extends AppBaseViewModel with Store {
       (coinMarketList) {
         _coinMarketList.addAll(coinMarketList);
         _page++;
+        _loadFavoritesCoin();
+      },
+      (error) {
+        if (error is ClientException) {
+          setError(error.message);
+        } else {
+          setError('Não foi possivel carregar os dados');
+        }
+      },
+    );
+  }
+
+  void _defineFavorities() {
+    List<CoinMarketModel> tempValue = _coinMarketList;
+
+    for (var coin in tempValue) {
+      if (_favoritiesCoin.any((c) => c.id == coin.id)) {
+        coin.isFavorite = true;
+      } else {
+        coin.isFavorite = false;
+      }
+    }
+    _coinMarketList = ObservableList<CoinMarketModel>.of(tempValue);
+  }
+
+  @action
+  Future<void> _loadFavoritesCoin() async {
+    final result = await _coinRepository.getFavorites();
+    result.fold(
+      (coins) {
+        _favoritiesCoin.addAll(coins);
+        _defineFavorities();
       },
       (error) {
         if (error is ClientException) {

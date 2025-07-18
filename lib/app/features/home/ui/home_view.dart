@@ -50,11 +50,12 @@ class _HomeViewState extends State<HomeView> {
       appBar: AppBar(
         title: const Text('Cripto App'),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.of(context).pushNamed('/favoritas');
         },
-        child: const Icon(Icons.star),
+        icon: const Icon(Icons.star),
+        label: const Text('Favoritos'),
       ),
       drawer: const HomeDrawer(),
       body: Center(
@@ -80,6 +81,17 @@ class _HomeViewState extends State<HomeView> {
                       return ListTile(
                         title: Row(
                           children: [
+                            IconButton(
+                              onPressed: () => context
+                                  .read<HomeViewModel>()
+                                  .updateFavorities(coin),
+                              icon: Icon(
+                                Icons.star,
+                                color: coin.isFavorite
+                                    ? Colors.yellow
+                                    : Colors.grey,
+                              ),
+                            ),
                             ClipOval(
                               child: Image.network(
                                 coin.imageUrl,
@@ -89,7 +101,30 @@ class _HomeViewState extends State<HomeView> {
                               ),
                             ),
                             SizedBox.square(dimension: 20),
-                            Text(coin.name),
+                            Expanded(
+                              child: Text(
+                                coin.name,
+                                style: TextStyle(
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              '%${coin.priceChangePercentage24h.toStringAsFixed(2)}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: coin.priceChangePercentage24h < 0
+                                    ? Colors.red
+                                    : Colors.green,
+                              ),
+                            ),
+                            SizedBox.square(dimension: 10),
+                            Text(
+                              coin.symbol.toUpperCase(),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ],
                         ),
                         onTap: () {

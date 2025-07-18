@@ -1,4 +1,5 @@
 import 'package:app_cripto/app/core/client/dio_client.dart';
+import 'package:app_cripto/app/core/database/sql_connection_factory.dart';
 import 'package:app_cripto/app/core/modules/app_module.dart';
 import 'package:app_cripto/app/domain/repositories/coin/coin_coingecko_repository.dart';
 import 'package:app_cripto/app/domain/services/coin/coin_coingecko_service.dart';
@@ -18,8 +19,10 @@ class HomeModule extends AppModule {
         },
         bindings: [
           Provider(
-            create: (context) =>
-                CoinCoingeckoService(client: context.read<DioClient>()),
+            create: (context) => CoinCoingeckoService(
+              client: context.read<DioClient>(),
+              sqlConnectionFactory: context.read<SqlConnectionFactory>(),
+            ),
           ),
           Provider(
             create: (context) => CoinCoingeckoRepository(
