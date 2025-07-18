@@ -1,13 +1,12 @@
-
 import 'package:app_cripto/app/core/client/dio_client.dart';
 import 'package:app_cripto/app/domain/models/coin/coin_market_model.dart';
 import 'package:app_cripto/app/domain/models/coin/coin_model.dart';
 import 'package:app_cripto/app/domain/services/coin/coin_service.dart';
 
-class CoinServiceCoingecko implements CoinService {
+class CoinCoingeckoService implements CoinService {
   final DioClient _client;
 
-  CoinServiceCoingecko({required DioClient client}) : _client = client;
+  CoinCoingeckoService({required DioClient client}) : _client = client;
 
   @override
   Future<List<CoinModel>> getAll() async {
@@ -19,17 +18,17 @@ class CoinServiceCoingecko implements CoinService {
 
   @override
   Future<List<CoinMarketModel>> getCoinMarketByPage(int page) async {
-    final response = await _client.get('/coins/markets', queryParameters: {
-      'vs_currency': 'brl',
-      'order': 'market_cap_desc',
-      'per_page': 10,
-      'page': page,
-    });
+    final response = await _client.get(
+      '/coins/markets',
+      queryParameters: {
+        'vs_currency': 'brl',
+        'order': 'market_cap_desc',
+        'per_page': 15,
+        'page': page,
+      },
+    );
     return (response.data as List)
         .map((coin) => CoinMarketModel.fromJson(coin))
         .toList();
   }
-
- 
-  
 }
