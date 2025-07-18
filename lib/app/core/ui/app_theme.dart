@@ -19,5 +19,9 @@ class AppTheme {
     drawerTheme: DrawerThemeData(
       backgroundColor: Colors.white,
     ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: Color.fromARGB(255, 17, 79, 185),
+      foregroundColor: Colors.white,
+    ),
   );
 }

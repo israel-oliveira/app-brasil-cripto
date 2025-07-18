@@ -2,18 +2,28 @@
 import 'package:app_cripto/app/domain/models/coin/coin_market_model.dart';
 import 'package:app_cripto/app/domain/models/coin/coin_model.dart';
 import 'package:app_cripto/app/domain/repositories/coin/coin_repository.dart';
+import 'package:app_cripto/app/domain/services/coin/coin_service.dart';
 import 'package:result_dart/result_dart.dart';
 
 class CoinCoingeckoRepository implements CoinRepository {
+  final CoinService _coinService;
+  CoinCoingeckoRepository({required CoinService coinService})
+      : _coinService = coinService;
   @override
-  AsyncResult<List<CoinModel>> getAllCoins() {
-    // Implementation for fetching all coins from CoinGecko
-    throw UnimplementedError();
+  AsyncResult<List<CoinModel>> getAllCoins() async {
+    final result = await _coinService.getAll();
+    if (result.isEmpty) {
+      return Failure(Exception('No coins found'));
+    }
+    return Success(result);
   }
 
   @override
-  AsyncResult<List<CoinMarketModel>> getCoinMarketByPage(int page) {
-    // Implementation for fetching coin market data by page from CoinGecko
-    throw UnimplementedError();
+  AsyncResult<List<CoinMarketModel>> getCoinMarketByPage(int page) async {
+    final result = await _coinService.getCoinMarketByPage(page);
+    if (result.isEmpty) {
+      return Failure(Exception('No coin market data found'));
+    }
+    return Success(result);
   }
 }

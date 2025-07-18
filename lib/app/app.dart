@@ -1,3 +1,4 @@
+import 'package:app_cripto/app/core/client/dio_client.dart';
 import 'package:app_cripto/app/core/navigator/app_navigator.dart';
 import 'package:app_cripto/app/core/ui/app_theme.dart';
 import 'package:app_cripto/app/domain/repositories/user/user_repository.dart';
@@ -7,6 +8,7 @@ import 'package:app_cripto/app/domain/services/user/user_service_imp.dart';
 import 'package:app_cripto/app/features/auth/auth_module.dart';
 import 'package:app_cripto/app/features/home/home_module.dart';
 import 'package:app_cripto/app/features/splash/splash_view.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -35,6 +37,7 @@ class App extends StatelessWidget {
           )..loadListener(),
           lazy: false,
         ),
+        Provider(create: (_) => DioClient(dio: Dio())),
       ],
       child: MaterialApp(
         title: 'Brasil Cripto',

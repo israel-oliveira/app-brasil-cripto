@@ -12,6 +12,12 @@ class HomeView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Cripto App'),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed('/favoritas');
+        },
+        child: const Icon(Icons.star),
+      ),
       drawer: const HomeDrawer(),
       body: Center(
         child: TextButton(
