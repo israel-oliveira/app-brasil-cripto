@@ -13,4 +13,11 @@ extension ThemeExtensions on BuildContext {
     fontWeight: FontWeight.bold,
     color: Colors.grey,
   );
+
+  TextStyle get titleDetailsInfo => TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 16,
+  );
+
+  TextStyle get subtitleStyle => TextStyle(fontSize: 20);
 }

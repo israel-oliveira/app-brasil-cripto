@@ -9,4 +9,5 @@ abstract class CoinService {
   Future<List<CoinMarketModel>> getCoinMarketByPage(int page);
   Future<List<CoinMarketModel>> getFavoritiesCoinMarket(List<CoinModel> coins);
   Future<CoinDetailModel> getCoinDetailById(String id);
+  Future<List<double>> getCoinPriceHistoryById(String id);
 }

@@ -73,4 +73,14 @@ class CoinCoingeckoRepository implements CoinRepository {
       return Failure(e);
     }
   }
+  
+  @override
+  AsyncResult<List<double>> getCoinPriceHistoryById(String id) async {
+    try {
+      final result = await _coinService.getCoinPriceHistoryById(id);
+      return Success(result);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
 }

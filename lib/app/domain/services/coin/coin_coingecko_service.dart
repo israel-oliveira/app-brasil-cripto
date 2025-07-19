@@ -127,4 +127,19 @@ class CoinCoingeckoService implements CoinService {
 
     return CoinDetailModel.fromJson(response.data);
   }
+
+  @override
+  Future<List<double>> getCoinPriceHistoryById(String id) async {
+    final response = await _client.get(
+      '/coins/$id/market_chart',
+      queryParameters: {
+        'vs_currency': 'brl',
+        'days': '7',
+      },
+    );
+
+    return (response.data['prices'] as List)
+        .map((price) => price[1] as double)
+        .toList();
+  }
 }

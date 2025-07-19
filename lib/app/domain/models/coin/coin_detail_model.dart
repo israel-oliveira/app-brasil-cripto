@@ -7,7 +7,6 @@ class CoinDetailModel extends CoinModel {
   final Map<String, String> description;
   final Links links;
   final String? genesisDate;
-  final SparklineIn7d? sparklineIn7d;
 
   CoinDetailModel({
     required super.id,
@@ -19,7 +18,6 @@ class CoinDetailModel extends CoinModel {
     required this.description,
     required this.links,
     this.genesisDate,
-    this.sparklineIn7d,
   });
 
   factory CoinDetailModel.fromJson(Map<String, dynamic> json) {
@@ -33,9 +31,7 @@ class CoinDetailModel extends CoinModel {
       description: Map<String, String>.from(json['description']),
       links: Links.fromJson(json['links']),
       genesisDate: json['genesis_date'],
-      sparklineIn7d: json['sparkline_in_7d'] != null 
-          ? SparklineIn7d.fromJson(json['sparkline_in_7d']) 
-          : null,
+      
     );
   }
 
@@ -51,7 +47,6 @@ class CoinDetailModel extends CoinModel {
       'description': description,
       'links': links.toJson(),
       'genesis_date': genesisDate,
-      'sparkline_in_7d': sparklineIn7d?.toJson(),
     };
   }
 }
@@ -120,22 +115,3 @@ class Links {
   }
 }
 
-class SparklineIn7d {
-  final List<double> price;
-
-  SparklineIn7d({
-    required this.price,
-  });
-
-  factory SparklineIn7d.fromJson(Map<String, dynamic> json) {
-    return SparklineIn7d(
-      price: List<double>.from(json['price']),
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'price': price,
-    };
-  }
-}

@@ -1,5 +1,6 @@
 import 'package:app_cripto/app/core/ui/extensions/theme_extension.dart';
 import 'package:app_cripto/app/core/ui/helpers/notifier/listener_view.dart';
+import 'package:app_cripto/app/core/ui/widgets/app_price_graphic.dart';
 import 'package:app_cripto/app/core/ui/widgets/app_state_empty.dart';
 import 'package:app_cripto/app/domain/models/coin/coin_detail_model.dart';
 import 'package:app_cripto/app/features/home/details/details_coin_view_model.dart';
@@ -27,7 +28,7 @@ class _DetailsCoinViewState extends State<DetailsCoinView> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (coinId != null) {
-        context.read<DetailsCoinViewModel>().loadCoinDetail(coinId!);
+        context.read<DetailsCoinViewModel>().load(coinId!);
       }
     });
   }
@@ -51,7 +52,7 @@ class _DetailsCoinViewState extends State<DetailsCoinView> {
         return Scaffold(
           appBar: AppBar(
             title: Text(
-              coinDetail.name,
+              '${coinDetail.name} (${coinDetail.symbol.toUpperCase()})',
             ),
           ),
           body: LayoutBuilder(
@@ -101,10 +102,115 @@ class _DetailsCoinViewState extends State<DetailsCoinView> {
                             ),
                           ],
                         ),
-                        SizedBox.square(dimension: 20),
-                        Text(
-                          'Preço Atual: ${coinDetail.marketData.currentPrice['usd']} USD',
-                          style: TextStyle(fontSize: 18),
+                        Divider(
+                          height: 40,
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Preço Atual:',
+                                        style: context.titleDetailsInfo,
+                                      ),
+                                      Text(
+                                        'R\$ ${coinDetail.marketData.currentPrice['brl']?.toStringAsFixed(2)} (BRL)',
+                                        style: context.subtitleStyle,
+                                      ),
+                                      Text(
+                                        'U\$ ${coinDetail.marketData.currentPrice['usd']?.toStringAsFixed(2)} (USD)',
+                                        style: context.subtitleStyle,
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Variação 24h:',
+                                        style: context.titleDetailsInfo,
+                                      ),
+                                      Text(
+                                        '${coinDetail.marketData.priceChangePercentage24h?.toStringAsFixed(2)}%',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 24,
+                                          color:
+                                              coinDetail
+                                                      .marketData
+                                                      .priceChangePercentage24h! <
+                                                  0
+                                              ? Colors.red
+                                              : Colors.green,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Divider(height: 20),
+                              Row(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Volume de mercado:',
+                                        style: context.titleDetailsInfo,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'R\$ ${coinDetail.marketData.totalVolume['brl']?.toStringAsFixed(2)} (BRL)',
+                                        style: context.subtitleStyle,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'U\$ ${coinDetail.marketData.totalVolume['usd']?.toStringAsFixed(2)} (USD)',
+                                        style: context.subtitleStyle,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Divider(height: 20),
+                              Text(
+                                'Preços dos Últimos 7 Dias',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              AppPriceGraphic(
+                                prices:
+                                    context
+                                        .read<DetailsCoinViewModel>()
+                                        .coinPriceHistory ??
+                                    <double>[],
+                              ),
+                              Divider(height: 20),
+                              Text(
+                                'Descrição',
+                                style: context.titleDetailsInfo,
+                              ),
+                              Text(
+                                coinDetail.description['en'] ??
+                                    'Sem descrição disponível',
+                              ),
+                              SizedBox.square(dimension: 20),
+                            ],
+                          ),
                         ),
                         SizedBox.square(dimension: 20),
                         // Add more details as needed
