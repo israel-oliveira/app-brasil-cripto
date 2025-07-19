@@ -4,7 +4,7 @@ class CoinMarketModel extends CoinModel {
   final String imageUrl;
   final double currentPrice;
   final double marketCap;
-  final int rank;
+  final int? rank;
   final int totalVolume;
   final double priceChange24h;
   final double priceChangePercentage24h;

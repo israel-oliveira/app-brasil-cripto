@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:app_cripto/app/core/enum/app_state_enum.dart';
 import 'package:app_cripto/app/core/ui/helpers/notifier/listener_view.dart';
 import 'package:app_cripto/app/core/ui/widgets/app_dialog_selector.dart';
@@ -59,8 +57,15 @@ class _HomeViewState extends State<HomeView> {
             onPressed: () {
               AppDialogCoinSelector<CoinModel>(
                 values: context.read<HomeViewModel>().coins,
-                onSelected: (coin) {
-                  log('Selected coin: ${coin.toString()}');
+                onSelected: (coin) async {
+                  Navigator.pop(context);
+                  await Navigator.of(context).pushNamed(
+                    '/detalhes',
+                    arguments: coin,
+                  );
+                  if (context.mounted) {
+                    await context.read<HomeViewModel>().loadFavoritesCoin();
+                  }
                 },
               ).show(context);
             },
@@ -149,7 +154,7 @@ class _HomeViewState extends State<HomeView> {
                         onTap: () async {
                           await Navigator.of(context).pushNamed(
                             '/detalhes',
-                            arguments: coin.id,
+                            arguments: coin,
                           );
                           if (context.mounted) {
                             await context

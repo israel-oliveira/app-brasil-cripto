@@ -9,7 +9,6 @@ import 'package:app_cripto/app/features/home/favorites/favorites_view.dart';
 import 'package:app_cripto/app/features/home/favorites/favorites_view_model.dart';
 import 'package:app_cripto/app/features/home/ui/home_view.dart';
 import 'package:app_cripto/app/features/home/ui/home_view_model.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 class HomeModule extends AppModule {

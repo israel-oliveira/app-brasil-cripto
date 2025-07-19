@@ -123,8 +123,12 @@ class _FavoritesViewState extends State<FavoritesView> {
                             ),
                           ],
                         ),
-                        onTap: () {
-                          // Handle item tap
+                        onTap: () async{
+                          await Navigator.of(context).pushNamed(
+                            '/detalhes',
+                            arguments: coin,
+                          );
+                           
                         },
                       );
                     },

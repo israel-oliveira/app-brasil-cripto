@@ -1,8 +1,9 @@
 import 'package:app_cripto/app/core/ui/extensions/theme_extension.dart';
 import 'package:app_cripto/app/core/ui/helpers/notifier/listener_view.dart';
+import 'package:app_cripto/app/core/ui/widgets/app_delete_dialog.dart';
 import 'package:app_cripto/app/core/ui/widgets/app_price_graphic.dart';
 import 'package:app_cripto/app/core/ui/widgets/app_state_empty.dart';
-import 'package:app_cripto/app/domain/models/coin/coin_detail_model.dart';
+import 'package:app_cripto/app/domain/models/coin/coin_model.dart';
 import 'package:app_cripto/app/features/home/details/details_coin_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -16,7 +17,7 @@ class DetailsCoinView extends StatefulWidget {
 }
 
 class _DetailsCoinViewState extends State<DetailsCoinView> {
-  late String? coinId;
+  late CoinModel? coinId;
 
   @override
   void initState() {
@@ -35,25 +36,54 @@ class _DetailsCoinViewState extends State<DetailsCoinView> {
 
   @override
   Widget build(BuildContext context) {
-    coinId = ModalRoute.of(context)?.settings.arguments as String?;
+    coinId = ModalRoute.of(context)?.settings.arguments as CoinModel?;
 
     return Observer(
       builder: (context) {
-        CoinDetailModel? coinDetail = context
-            .read<DetailsCoinViewModel>()
-            .coinDetail;
-
-        if (coinDetail == null) {
+        if (context.read<DetailsCoinViewModel>().coinDetail == null) {
           return Scaffold(
             appBar: AppBar(title: const Text('Detalhes da Moeda')),
-            body: AppStateEmpty(),
+            body: Center(child: AppStateEmpty()),
           );
         }
         return Scaffold(
           appBar: AppBar(
             title: Text(
-              '${coinDetail.name} (${coinDetail.symbol.toUpperCase()})',
+              '${context.read<DetailsCoinViewModel>().coinDetail!.name} (${context.read<DetailsCoinViewModel>().coinDetail!.symbol.toUpperCase()})',
             ),
+            actions: [
+              Observer(
+                builder: (context) {
+                  return IconButton(
+                    icon: Icon(
+                      Icons.star,
+                      color: context.read<DetailsCoinViewModel>().isFavorite
+                          ? Colors.yellow
+                          : Colors.grey,
+                    ),
+                    onPressed: () async {
+                      if (context.read<DetailsCoinViewModel>().isFavorite) {
+                        AppDeleteDialog().show(
+                          context,
+                          title: 'Remover moeda',
+                          content:
+                              'Deseja remover ${context.read<DetailsCoinViewModel>().coinDetail?.name} das favoritas?',
+                          onConfirm: () {
+                            context
+                                .read<DetailsCoinViewModel>()
+                                .updateFavorities();
+                          },
+                        );
+                      } else {
+                        await context
+                            .read<DetailsCoinViewModel>()
+                            .updateFavorities();
+                      }
+                    },
+                  );
+                },
+              ),
+            ],
           ),
           body: LayoutBuilder(
             builder: (context, constraints) {
@@ -86,7 +116,11 @@ class _DetailsCoinViewState extends State<DetailsCoinView> {
                           children: [
                             ClipOval(
                               child: Image.network(
-                                coinDetail.image['large'] ?? '',
+                                context
+                                        .read<DetailsCoinViewModel>()
+                                        .coinDetail!
+                                        .image['large'] ??
+                                    '',
                                 width: 80,
                                 height: 80,
                                 fit: BoxFit.cover,
@@ -94,7 +128,10 @@ class _DetailsCoinViewState extends State<DetailsCoinView> {
                             ),
                             SizedBox.square(dimension: 20),
                             Text(
-                              coinDetail.name,
+                              context
+                                  .read<DetailsCoinViewModel>()
+                                  .coinDetail!
+                                  .name,
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
@@ -123,11 +160,11 @@ class _DetailsCoinViewState extends State<DetailsCoinView> {
                                         style: context.titleDetailsInfo,
                                       ),
                                       Text(
-                                        'R\$ ${coinDetail.marketData.currentPrice['brl']?.toStringAsFixed(2)} (BRL)',
+                                        'R\$ ${context.read<DetailsCoinViewModel>().coinDetail!.marketData.currentPrice['brl']?.toStringAsFixed(2)} (BRL)',
                                         style: context.subtitleStyle,
                                       ),
                                       Text(
-                                        'U\$ ${coinDetail.marketData.currentPrice['usd']?.toStringAsFixed(2)} (USD)',
+                                        'U\$ ${context.read<DetailsCoinViewModel>().coinDetail!.marketData.currentPrice['usd']?.toStringAsFixed(2)} (USD)',
                                         style: context.subtitleStyle,
                                       ),
                                     ],
@@ -141,12 +178,16 @@ class _DetailsCoinViewState extends State<DetailsCoinView> {
                                         style: context.titleDetailsInfo,
                                       ),
                                       Text(
-                                        '${coinDetail.marketData.priceChangePercentage24h?.toStringAsFixed(2)}%',
+                                        '${context.read<DetailsCoinViewModel>().coinDetail!.marketData.priceChangePercentage24h?.toStringAsFixed(2)}%',
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 24,
                                           color:
-                                              coinDetail
+                                              context
+                                                      .read<
+                                                        DetailsCoinViewModel
+                                                      >()
+                                                      .coinDetail!
                                                       .marketData
                                                       .priceChangePercentage24h! <
                                                   0
@@ -171,12 +212,12 @@ class _DetailsCoinViewState extends State<DetailsCoinView> {
                                       ),
                                       SizedBox(width: 8),
                                       Text(
-                                        'R\$ ${coinDetail.marketData.totalVolume['brl']?.toStringAsFixed(2)} (BRL)',
+                                        'R\$ ${context.read<DetailsCoinViewModel>().coinDetail!.marketData.totalVolume['brl']?.toStringAsFixed(2)} (BRL)',
                                         style: context.subtitleStyle,
                                       ),
                                       SizedBox(width: 8),
                                       Text(
-                                        'U\$ ${coinDetail.marketData.totalVolume['usd']?.toStringAsFixed(2)} (USD)',
+                                        'U\$ ${context.read<DetailsCoinViewModel>().coinDetail!.marketData.totalVolume['usd']?.toStringAsFixed(2)} (USD)',
                                         style: context.subtitleStyle,
                                       ),
                                     ],
@@ -205,7 +246,10 @@ class _DetailsCoinViewState extends State<DetailsCoinView> {
                                 style: context.titleDetailsInfo,
                               ),
                               Text(
-                                coinDetail.description['en'] ??
+                                context
+                                        .read<DetailsCoinViewModel>()
+                                        .coinDetail!
+                                        .description['en'] ??
                                     'Sem descrição disponível',
                               ),
                               SizedBox.square(dimension: 20),

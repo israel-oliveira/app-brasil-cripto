@@ -54,8 +54,8 @@ class CoinDetailModel extends CoinModel {
 class MarketData {
   final Map<String, num> currentPrice;
   final double? priceChangePercentage24h;
-  final Map<String, int> marketCap;
-  final Map<String, int> totalVolume;
+  final Map<String, num> marketCap;
+  final Map<String, num> totalVolume;
   final double? circulatingSupply;
   final double? totalSupply;
 
@@ -72,8 +72,8 @@ class MarketData {
     return MarketData(
       currentPrice: Map<String, num>.from(json['current_price']),
       priceChangePercentage24h: json['price_change_percentage_24h']?.toDouble(),
-      marketCap: Map<String, int>.from(json['market_cap']),
-      totalVolume: Map<String, int>.from(json['total_volume']),
+      marketCap: Map<String, num>.from(json['market_cap']),
+      totalVolume: Map<String, num>.from(json['total_volume']),
       circulatingSupply: json['circulating_supply']?.toDouble(),
       totalSupply: json['total_supply']?.toDouble(),
     );
