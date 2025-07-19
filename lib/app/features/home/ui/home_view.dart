@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:app_cripto/app/core/enum/app_state_enum.dart';
 import 'package:app_cripto/app/core/ui/helpers/notifier/listener_view.dart';
-import 'package:app_cripto/app/core/ui/widgets/app_search.dart';
+import 'package:app_cripto/app/core/ui/widgets/app_dialog_selector.dart';
+import 'package:app_cripto/app/domain/models/coin/coin_model.dart';
 import 'package:app_cripto/app/features/home/ui/home_view_model.dart';
 import 'package:app_cripto/app/features/home/ui/widgets/home_drawer.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +53,19 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cripto App'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              AppDialogCoinSelector<CoinModel>(
+                values: context.read<HomeViewModel>().coins,
+                onSelected: (coin) {
+                  log('Selected coin: ${coin.toString()}');
+                },
+              ).show(context);
+            },
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
@@ -65,7 +81,6 @@ class _HomeViewState extends State<HomeView> {
       body: Center(
         child: Column(
           children: [
-            AppSearch(),
             Expanded(
               child: Observer(
                 builder: (context) {
