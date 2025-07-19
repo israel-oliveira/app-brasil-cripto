@@ -37,7 +37,9 @@ class _RegisterViewState extends State<RegisterView> {
       context: context,
       successCallback: (viewModel, listenerView) {
         listenerView.dispose();
-        Navigator.of(context).pop();
+        if(Navigator.canPop(context)) {
+          Navigator.pop(context);
+        }
       },
     );
   }
@@ -56,7 +58,6 @@ class _RegisterViewState extends State<RegisterView> {
               child: Icon(
                 Icons.arrow_back_ios_outlined,
                 size: 20,
-                color: context.primaryColor,
               ),
             ),
           ),
@@ -66,17 +67,24 @@ class _RegisterViewState extends State<RegisterView> {
           children: [
             Text(
               'Brasil Cripto',
-              style: TextStyle(fontSize: 12, color: context.primaryColor),
+              style: TextStyle(
+                fontSize: 12,
+              ),
             ),
             Text(
               'Cadastro',
-              style: TextStyle(fontSize: 15, color: context.primaryColor),
+              style: TextStyle(
+                fontSize: 15,
+              ),
             ),
           ],
         ),
       ),
       body: ListView(
         children: [
+          SizedBox.square(
+            dimension: 20,
+          ),
           SizedBox(
             height: MediaQuery.sizeOf(context).width * 0.5,
             child: FittedBox(

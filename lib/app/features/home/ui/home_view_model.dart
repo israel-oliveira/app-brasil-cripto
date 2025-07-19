@@ -37,8 +37,8 @@ abstract class HomeViewModelBase extends AppBaseViewModel with Store {
   Future<void> load() async {
     showLoadAndResetState();
     await Future.wait([
-      _loadCoinMarket(),
       _loadCoin(),
+      _loadCoinMarket(),
     ]);
 
     if (!hasError) {
