@@ -1,3 +1,4 @@
+import 'package:app_cripto/app/domain/models/coin/coin_detail_model.dart';
 import 'package:app_cripto/app/domain/models/coin/coin_market_model.dart';
 import 'package:app_cripto/app/domain/models/coin/coin_model.dart';
 import 'package:app_cripto/app/domain/repositories/coin/coin_repository.dart';
@@ -10,11 +11,15 @@ class CoinCoingeckoRepository implements CoinRepository {
     : _coinService = coinService;
   @override
   AsyncResult<List<CoinModel>> getAllCoins() async {
-    final result = await _coinService.getAll();
-    if (result.isEmpty) {
+    try {
+      final result = await _coinService.getAll();
+      if (result.isEmpty) {
       return Failure(Exception('No coins found'));
+      }
+      return Success(result);
+    } on Exception catch (e) {
+      return Failure(e);
     }
-    return Success(result);
   }
 
   @override
@@ -51,8 +56,21 @@ class CoinCoingeckoRepository implements CoinRepository {
   AsyncResult<List<CoinMarketModel>> getFavoritiesCoinMarket(
     List<CoinModel> coins,
   ) async {
-    final result = await _coinService.getFavoritiesCoinMarket(coins);
+    try {
+      final result = await _coinService.getFavoritiesCoinMarket(coins);
+      return Success(result);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
 
-    return Success(result);
+  @override
+  AsyncResult<CoinDetailModel> getCoinDetailById(String id) async {
+    try {
+      final result = await _coinService.getCoinDetailById(id);
+      return Success(result);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
   }
 }

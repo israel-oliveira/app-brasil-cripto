@@ -3,10 +3,13 @@ import 'package:app_cripto/app/core/database/sql_connection_factory.dart';
 import 'package:app_cripto/app/core/modules/app_module.dart';
 import 'package:app_cripto/app/domain/repositories/coin/coin_coingecko_repository.dart';
 import 'package:app_cripto/app/domain/services/coin/coin_coingecko_service.dart';
+import 'package:app_cripto/app/features/home/details/details_coin_view.dart';
+import 'package:app_cripto/app/features/home/details/details_coin_view_model.dart';
 import 'package:app_cripto/app/features/home/favorites/favorites_view.dart';
 import 'package:app_cripto/app/features/home/favorites/favorites_view_model.dart';
 import 'package:app_cripto/app/features/home/ui/home_view.dart';
 import 'package:app_cripto/app/features/home/ui/home_view_model.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 class HomeModule extends AppModule {
@@ -15,7 +18,8 @@ class HomeModule extends AppModule {
         routers: {
           '/home': (_) => const HomeView(),
           '/favoritas': (_) =>
-              const FavoritesView(), // Assuming favorites view is also part of home
+              const FavoritesView(),
+          '/detalhes': (_) => const DetailsCoinView(),
         },
         bindings: [
           Provider(
@@ -39,6 +43,9 @@ class HomeModule extends AppModule {
               coinRepository: context.read<CoinCoingeckoRepository>(),
             ),
           ),
+          Provider(create: (context) => DetailsCoinViewModel(
+            coinRepository: context.read<CoinCoingeckoRepository>(),
+          )),
         ],
       );
 }

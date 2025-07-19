@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:app_cripto/app/core/client/dio_client.dart';
 import 'package:app_cripto/app/core/database/sql_connection_factory.dart';
+import 'package:app_cripto/app/domain/models/coin/coin_detail_model.dart';
 import 'package:app_cripto/app/domain/models/coin/coin_market_model.dart';
 import 'package:app_cripto/app/domain/models/coin/coin_model.dart';
 import 'package:app_cripto/app/domain/services/coin/coin_service.dart';
@@ -53,18 +54,18 @@ class CoinCoingeckoService implements CoinService {
   }
 
   Future<void> _saveLocalCoins(List<CoinModel> coins) async {
-  final conn = await _sqlConnectionFactory.openConnection();
+    final conn = await _sqlConnectionFactory.openConnection();
 
-  await conn.transaction((txn) async {
-    for (final coin in coins) {
-      await txn.insert(
-        'coins',
-        coin.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-    }
-  });
-}
+    await conn.transaction((txn) async {
+      for (final coin in coins) {
+        await txn.insert(
+          'coins',
+          coin.toJson(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
+    });
+  }
 
   Future<List<CoinModel>> _getLocalCoins() async {
     final conn = await _sqlConnectionFactory.openConnection();
@@ -116,5 +117,14 @@ class CoinCoingeckoService implements CoinService {
     return (response.data as List)
         .map((coin) => CoinMarketModel.fromFavoritiesJson(coin))
         .toList();
+  }
+
+  @override
+  Future<CoinDetailModel> getCoinDetailById(String id) async {
+    final response = await _client.get(
+      '/coins/$id',
+    );
+
+    return CoinDetailModel.fromJson(response.data);
   }
 }

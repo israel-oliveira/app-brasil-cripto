@@ -146,8 +146,16 @@ class _HomeViewState extends State<HomeView> {
                             ),
                           ],
                         ),
-                        onTap: () {
-                          // Handle item tap
+                        onTap: () async {
+                          await Navigator.of(context).pushNamed(
+                            '/detalhes',
+                            arguments: coin.id,
+                          );
+                          if (context.mounted) {
+                            await context
+                                .read<HomeViewModel>()
+                                .loadFavoritesCoin();
+                          }
                         },
                       );
                     },
